@@ -4,28 +4,38 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>глав.net — пол года</title>
+  <title>6 months</title>
   <link rel="stylesheet" href="assets/css/site.css">
   <link rel="stylesheet" href="assets/css/admin.css">
+  <link rel="icon" href="assets/images/brand/favicon-32x32.png" type="image/png">
 </head>
 <body>
   <header class="site-header">
     <nav class="nav-shell">
-      <a class="logo" href="index.html">пол года</a>
+      <a class="logo" href="index.html">6 months</a>
       <div class="nav-links"><a href="index.html">на сайт</a></div>
     </nav>
   </header>
 
   <main class="admin-shell">
-    <p class="eyebrow">owner panel</p>
     <h1 class="page-title">глав.net</h1>
 
     <section class="login-panel" id="login-panel">
       <h2>вход владельца</h2>
-      <p>панель обновляет наличие напрямую в github. ключ хранится только до закрытия вкладки и не записывается в сайт.</p>
-      <label>github логин<input id="owner" value="SKIANORAK" autocomplete="username"></label>
+      <p class="admin-note"><strong>обычный пароль здесь не используется.</strong> нужен личный github token с доступом только к репозиторию 6months и правом contents: read and write. token хранится только до закрытия вкладки.</p>
+      <details class="token-help">
+        <summary>как создать token</summary>
+        <ol>
+          <li>github → settings → developer settings</li>
+          <li>personal access tokens → fine-grained tokens</li>
+          <li>выбрать репозиторий 6months</li>
+          <li>repository permissions → contents → read and write</li>
+          <li>создать token и вставить его ниже</li>
+        </ol>
+      </details>
+      <label>github логин<input id="owner" value="arcyuke" autocomplete="username"></label>
       <label>репозиторий<input id="repo" value="6months"></label>
-      <label>пароль / fine-grained token<input id="token" type="password" autocomplete="current-password" placeholder="github_pat_..."></label>
+      <label>github token<input id="token" type="password" autocomplete="current-password" placeholder="github_pat_..."></label>
       <button id="login" class="admin-button">войти</button>
       <div class="admin-message" id="login-message"></div>
     </section>
@@ -40,6 +50,8 @@
     </section>
   </main>
 
+  <div data-site-footer></div>
+  <script src="assets/js/common.js"></script>
   <script src="assets/js/admin.js"></script>
 </body>
 </html>
