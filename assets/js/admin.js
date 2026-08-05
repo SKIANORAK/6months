@@ -4,7 +4,7 @@ let session={owner:'',repo:'',token:'',sha:'',products:[]};
 function api(path){return `https://api.github.com/repos/${session.owner}/${session.repo}${path}`}
 function headers(){return{'Accept':'application/vnd.github+json','Authorization':`Bearer ${session.token}`,'X-GitHub-Api-Version':'2022-11-28'}}
 function encodeUtf8(value){return btoa(unescape(encodeURIComponent(value)))}
-function decodeUtf8(value){return decodeURIComponent(escape(atob(value.replace(/\n/g,''))))}
+function decodeUtf8(value){return decodeURIComponent(escape(atob(value.replace(/\n/g,'')))) }
 function message(id,text,error=false){const node=document.getElementById(id);node.textContent=text;node.style.color=error?'#ff8d8d':'#aaa'}
 
 async function login(){
@@ -23,7 +23,7 @@ async function login(){
     document.getElementById('login-panel').hidden=true;
     document.getElementById('editor').hidden=false;
     renderEditor();
-  }catch(error){console.error(error);message('login-message','не удалось войти. проверьте логин, репозиторий и права token: contents read/write',true)}
+  }catch(error){console.error(error);message('login-message','не удалось войти. проверьте token и право contents: read and write',true)}
 }
 
 function renderEditor(){
@@ -40,18 +40,30 @@ function renderEditor(){
     </article>`).join('');
 
   root.querySelectorAll('[data-action="add-size"]').forEach((button)=>button.addEventListener('click',()=>{
+    collect();
     const productIndex=Number(button.closest('[data-product]').dataset.product);
     session.products[productIndex].sizes.push({label:'',stock:0});
     renderEditor();
   }));
   root.querySelectorAll('[data-action="remove-size"]').forEach((button)=>button.addEventListener('click',()=>{
+    collect();
     const card=button.closest('[data-product]');
     session.products[Number(card.dataset.product)].sizes.splice(Number(button.dataset.size),1);
     renderEditor();
   }));
+  root.querySelectorAll('[data-stock-step]').forEach((button)=>button.addEventListener('click',()=>{
+    const row=button.closest('[data-size-row]');
+    const input=row.querySelector('[data-size-field="stock"]');
+    const next=Math.max(0,Number(input.value||0)+Number(button.dataset.stockStep));
+    input.value=next;
+  }));
 }
 
-function sizeRow(size,index){return `<div class="size-row" data-size-row="${index}"><div class="field"><label>размер<input data-size-field="label" value="${size.label}"></label></div><div class="field"><label>наличие<input data-size-field="stock" type="number" min="0" value="${size.stock??''}" placeholder="пусто = уточняется"></label></div><button data-action="remove-size" data-size="${index}">удалить</button></div>`}
+function sizeRow(size,index){return `<div class="size-row" data-size-row="${index}">
+  <div class="field"><label>размер<input data-size-field="label" value="${size.label}"></label></div>
+  <div class="field stock-field"><label>наличие<div class="stock-control"><button type="button" data-stock-step="-1">−</button><input data-size-field="stock" type="number" min="0" value="${Math.max(0,Number(size.stock||0))}"><button type="button" data-stock-step="1">+</button></div></label></div>
+  <button data-action="remove-size" data-size="${index}">удалить</button>
+</div>`}
 
 function collect(){
   document.querySelectorAll('[data-product]').forEach((card)=>{
@@ -59,10 +71,13 @@ function collect(){
     product.name=card.querySelector('[data-field="name"]').value.trim().toLowerCase();
     const price=card.querySelector('[data-field="price"]');if(price&&!price.disabled)product.price=Number(price.value||0);
     product.visible=card.querySelector('[data-field="visible"]').value==='true';
-    card.querySelectorAll('[data-size-row]').forEach((row)=>{
-      const sizeIndex=Number(row.dataset.sizeRow);const stockValue=row.querySelector('[data-size-field="stock"]').value;
-      product.sizes[sizeIndex]={label:row.querySelector('[data-size-field="label"]').value.trim().toLowerCase(),stock:stockValue===''?null:Number(stockValue)};
-    });
+    const rows=[...card.querySelectorAll('[data-size-row]')];
+    if(rows.length){
+      product.sizes=rows.map((row)=>({
+        label:row.querySelector('[data-size-field="label"]').value.trim().toLowerCase(),
+        stock:Math.max(0,Number(row.querySelector('[data-size-field="stock"]').value||0))
+      }));
+    }
   });
 }
 
@@ -73,7 +88,7 @@ async function save(){
     const result=await response.json();
     if(!response.ok)throw new Error(result.message||'save failed');
     session.sha=result.content.sha;
-    message('save-message','готово. наличие на сайте обновится после публикации github pages.');
+    message('save-message','готово. сайт обновится после публикации github pages.');
   }catch(error){console.error(error);message('save-message',`ошибка сохранения: ${error.message}`,true)}
 }
 
