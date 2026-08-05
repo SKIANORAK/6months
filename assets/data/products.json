@@ -1,0 +1,73 @@
+[
+  {
+    "id": "archive-reflective-jeans",
+    "name": "archive reflective jeans",
+    "badge": "archive",
+    "price": 3500,
+    "description": "широкие чёрные джинсы со светоотражающей тканью под дистресс-прорезями",
+    "characteristics": [
+      "джинсовая ткань",
+      "светоотражающие элементы",
+      "дистресс-обработка",
+      "машинный пошив"
+    ],
+    "philosophy": "светоотражающие элементы проявляются во вспышке, свете фар и уличных фонарей. вещь меняется вместе с освещением и на несколько секунд становится частью городской среды.",
+    "images": [
+      "assets/images/products/archive-reflective-jeans-1.jpg",
+      "assets/images/products/archive-reflective-jeans-2.jpg",
+      "assets/images/products/archive-reflective-jeans-3.jpg",
+      "assets/images/products/archive-reflective-jeans-4.jpg",
+      "assets/images/products/archive-reflective-jeans-5.jpg"
+    ],
+    "sizes": [
+      { "label": "one size", "stock": null }
+    ],
+    "visible": true,
+    "madeToOrder": false
+  },
+  {
+    "id": "archive-distressed-tee",
+    "name": "archive distressed tee",
+    "badge": "archive",
+    "price": 1500,
+    "description": "чёрная оверсайз-футболка с ручной дистресс-обработкой и прорезями",
+    "characteristics": [
+      "хлопок",
+      "чёрный цвет",
+      "oversize",
+      "ручная отделка"
+    ],
+    "philosophy": "порезы и вытянутые нити создают у новой вещи ощущение уже прожитой истории. каждый экземпляр немного отличается из-за ручной обработки.",
+    "images": [
+      "assets/images/products/archive-distressed-tee-1.jpg",
+      "assets/images/products/archive-distressed-tee-2.jpg",
+      "assets/images/products/archive-distressed-tee-3.jpg"
+    ],
+    "sizes": [
+      { "label": "one size", "stock": null }
+    ],
+    "visible": true,
+    "madeToOrder": false
+  },
+  {
+    "id": "custom-order",
+    "name": "custom order",
+    "badge": "individual",
+    "price": null,
+    "priceText": "договорная",
+    "description": "индивидуальная вещь или переделка по вашей идее",
+    "characteristics": [
+      "обсуждение идеи до начала работы",
+      "материалы подбираются отдельно",
+      "срок зависит от сложности",
+      "ручная и машинная работа"
+    ],
+    "philosophy": "индивидуальный заказ — это совместная работа над одной вещью. идея, материалы, посадка и детали обсуждаются до начала изготовления.",
+    "images": [
+      "assets/images/products/custom-order-1.jpg"
+    ],
+    "sizes": [],
+    "visible": true,
+    "madeToOrder": true
+  }
+]
