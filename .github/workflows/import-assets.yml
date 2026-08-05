@@ -1,0 +1,57 @@
+name: import legacy assets
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-assets.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout new site
+        uses: actions/checkout@v4
+
+      - name: clone old public repository
+        run: git clone --depth 1 https://github.com/SKIANORAK/watorie-.git /tmp/watorie
+
+      - name: copy all images and media
+        shell: bash
+        run: |
+          mkdir -p assets/images/legacy assets/images/products assets/images/brand assets/video
+
+          find /tmp/watorie -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.ico' \) -exec cp {} assets/images/legacy/ \;
+          find /tmp/watorie -maxdepth 1 -type f -iname '*.mp4' -exec cp {} assets/video/ \;
+
+          cp /tmp/watorie/jeans1.jpg assets/images/products/archive-reflective-jeans-1.jpg
+          cp /tmp/watorie/jeans3.jpg assets/images/products/archive-reflective-jeans-2.jpg
+          cp /tmp/watorie/t-shirts3.jpg assets/images/products/archive-reflective-jeans-3.jpg
+          cp /tmp/watorie/wjeans6.jpg assets/images/products/archive-reflective-jeans-4.jpg
+          cp /tmp/watorie/wjeans7.jpg assets/images/products/archive-reflective-jeans-5.jpg
+
+          cp /tmp/watorie/W-shirt.jpg assets/images/products/archive-distressed-tee-1.jpg
+          cp /tmp/watorie/W-shirt2.jpg assets/images/products/archive-distressed-tee-2.jpg
+          cp /tmp/watorie/W-shirt3.jpg assets/images/products/archive-distressed-tee-3.jpg
+          cp /tmp/watorie/shvei.jpg assets/images/products/custom-order-1.jpg
+
+          cp /tmp/watorie/orig.jpg assets/images/brand/orig.jpg
+          cp /tmp/watorie/favicon-32x32.png assets/images/brand/favicon-32x32.png
+          cp /tmp/watorie/apple-touch-icon.png assets/images/brand/apple-touch-icon.png
+
+      - name: commit imported files
+        shell: bash
+        run: |
+          git config user.name 'yuke'
+          git config user.email 'actions@users.noreply.github.com'
+          git add assets
+          if git diff --cached --quiet; then
+            echo 'nothing to import'
+            exit 0
+          fi
+          git commit -m 'import photos and media from legacy site'
+          git push
