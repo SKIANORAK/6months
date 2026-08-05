@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="пол года — независимый бренд одежды, архивные и единичные вещи ручной работы.">
+  <meta property="og:title" content="пол года / 6months">
+  <meta property="og:description" content="архивные и единичные вещи ручной работы">
+  <meta property="og:type" content="website">
+  <title>пол года / 6months</title>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="icon" href="assets/images/brand/favicon-32x32.png" type="image/png">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav-shell" aria-label="главная навигация">
+      <a class="logo" href="index.html">пол года</a>
+      <div class="nav-links">
+        <a href="#catalog">вещи</a>
+        <a href="about.html">о бренде</a>
+        <a href="bag.html">корзина (<span id="cart-count">0</span>)</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-media" aria-hidden="true">
+        <video autoplay muted loop playsinline poster="assets/images/brand/orig.jpg">
+          <source src="assets/video/1210.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <p class="eyebrow">independent clothing project</p>
+        <h1>пол года</h1>
+        <p>архивные и единичные вещи ручной работы</p>
+        <div class="hero-actions">
+          <a class="button button-light" href="#catalog">смотреть вещи</a>
+          <a class="button button-ghost" href="https://t.me/highallowww" target="_blank" rel="noreferrer">telegram</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="catalog-section" id="catalog">
+      <div class="section-heading">
+        <p class="eyebrow">available now</p>
+        <h2>вещи</h2>
+      </div>
+      <div class="products-grid" id="products-grid" aria-live="polite"></div>
+    </section>
+
+    <section class="process-section">
+      <div>
+        <p class="eyebrow">one by one</p>
+        <h2>новые вещи появляются постепенно</h2>
+      </div>
+      <p>единичные изделия, ручные переделки и индивидуальные заказы. процесс и новые позиции публикуются в telegram.</p>
+    </section>
+  </main>
+
+  <footer class="main-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>связь</h3>
+        <p><a href="https://t.me/highallowww" target="_blank" rel="noreferrer">telegram канал</a></p>
+        <p><a href="https://www.tiktok.com/@6ixmonth.s" target="_blank" rel="noreferrer">tik tok</a></p>
+      </div>
+      <div class="footer-section">
+        <h3>заказы</h3>
+        <p><a href="https://t.me/SKIANORAK" target="_blank" rel="noreferrer">@skianorak</a></p>
+        <p>доставка рассчитывается отдельно</p>
+      </div>
+      <div class="footer-section">
+        <h3>информация</h3>
+        <p><a href="about.html">о бренде</a></p>
+        <p><a href="admin.html" class="admin-entry">глав.net</a></p>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 пол года</div>
+  </footer>
+
+  <div id="custom-alert" class="custom-alert" role="status" aria-live="polite"></div>
+  <script src="assets/js/products-data.js"></script>
+  <script src="assets/js/site.js"></script>
+</body>
+</html>
