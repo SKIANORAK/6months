@@ -15,6 +15,10 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
+      - name: install ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
       - name: create lightweight hero video
         run: |
           ffmpeg -y -i assets/video/1210.mp4 \
