@@ -3,26 +3,30 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>вещь — пол года</title>
+  <title>6 months</title>
   <link rel="stylesheet" href="assets/css/site.css">
   <link rel="stylesheet" href="assets/css/product_months.css">
+  <link rel="icon" href="assets/images/brand/favicon-32x32.png" type="image/png">
 </head>
 <body>
   <header class="site-header">
     <nav class="nav-shell">
-      <a class="logo" href="index.html">пол года</a>
+      <a class="logo" href="index.html">6 months</a>
       <div class="nav-links">
-        <a href="index.html#catalog">вещи</a>
+        <a href="index.html#catalog">одежда</a>
+        <a href="about.html">о бренде</a>
         <a href="bag.html">корзина (<span id="cart-count">0</span>)</a>
       </div>
     </nav>
   </header>
 
   <main class="product-page" id="product-page">
-    <p class="muted">загрузка...</p>
+    <div class="loading-shell"><div class="loading-line" aria-label="загрузка"></div></div>
   </main>
 
+  <div data-site-footer></div>
   <div id="custom-alert" class="custom-alert" role="status" aria-live="polite"></div>
+  <script src="assets/js/common.js"></script>
   <script src="assets/js/product_months.js"></script>
 </body>
 </html>
