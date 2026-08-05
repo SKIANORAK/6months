@@ -1,0 +1,30 @@
+name: optimize hero video
+
+on:
+  push:
+    paths:
+      - .github/workflows/optimize-hero.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: create lightweight hero video
+        run: |
+          ffmpeg -y -i assets/video/1210.mp4 \
+            -vf "scale='min(1280,iw)':-2" \
+            -c:v libx264 -preset medium -crf 29 -movflags +faststart \
+            -an assets/video/hero.mp4
+      - name: commit optimized video
+        run: |
+          git config user.name "6months automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/video/hero.mp4
+          git commit -m "add optimized hero video" || exit 0
+          git push
