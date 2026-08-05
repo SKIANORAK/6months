@@ -30,6 +30,14 @@ jobs:
           ffmpeg -y -i assets/video/hero.mp4 \
             -vf "fps=4,scale=360:-2,tile=4x2:padding=8:margin=8" \
             -frames:v 1 -q:v 2 assets/images/debug/hero-tail-contact.jpg
+      - name: upload review files
+        uses: actions/upload-artifact@v4
+        with:
+          name: hero-tail-review
+          path: |
+            assets/video/hero.mp4
+            assets/images/debug/hero-tail-contact.jpg
+          retention-days: 1
       - name: commit hero and preview
         run: |
           git config user.name "6months automation"
