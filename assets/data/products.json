@@ -20,10 +20,22 @@
       "assets/images/products/archive-reflective-jeans-5.jpg"
     ],
     "sizes": [
-      { "label": "s", "stock": 0 },
-      { "label": "m", "stock": 0 },
-      { "label": "l", "stock": 0 },
-      { "label": "xl", "stock": 0 }
+      {
+        "label": "s",
+        "stock": 1
+      },
+      {
+        "label": "m",
+        "stock": 2
+      },
+      {
+        "label": "l",
+        "stock": 1
+      },
+      {
+        "label": "xl",
+        "stock": 2
+      }
     ],
     "visible": true,
     "madeToOrder": false
@@ -47,10 +59,22 @@
       "assets/images/products/archive-distressed-tee-3.jpg"
     ],
     "sizes": [
-      { "label": "s", "stock": 0 },
-      { "label": "m", "stock": 0 },
-      { "label": "l", "stock": 0 },
-      { "label": "xl", "stock": 0 }
+      {
+        "label": "s",
+        "stock": 3
+      },
+      {
+        "label": "m",
+        "stock": 2
+      },
+      {
+        "label": "l",
+        "stock": 1
+      },
+      {
+        "label": "xl",
+        "stock": 2
+      }
     ],
     "visible": true,
     "madeToOrder": false
