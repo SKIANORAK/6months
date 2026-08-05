@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>глав.net — пол года</title>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav-shell">
+      <a class="logo" href="index.html">пол года</a>
+      <div class="nav-links"><a href="index.html">на сайт</a></div>
+    </nav>
+  </header>
+
+  <main class="admin-shell">
+    <p class="eyebrow">owner panel</p>
+    <h1 class="page-title">глав.net</h1>
+
+    <section class="login-panel" id="login-panel">
+      <h2>вход владельца</h2>
+      <p>панель обновляет наличие напрямую в github. ключ хранится только до закрытия вкладки и не записывается в сайт.</p>
+      <label>github логин<input id="owner" value="SKIANORAK" autocomplete="username"></label>
+      <label>репозиторий<input id="repo" value="6months"></label>
+      <label>пароль / fine-grained token<input id="token" type="password" autocomplete="current-password" placeholder="github_pat_..."></label>
+      <button id="login" class="admin-button">войти</button>
+      <div class="admin-message" id="login-message"></div>
+    </section>
+
+    <section id="editor" hidden>
+      <div class="editor-toolbar">
+        <p id="editor-status">каталог загружен</p>
+        <button id="save" class="admin-button">сохранить изменения</button>
+      </div>
+      <div id="product-editor" class="product-editor"></div>
+      <div class="admin-message" id="save-message"></div>
+    </section>
+  </main>
+
+  <script src="assets/js/admin.js"></script>
+</body>
+</html>
