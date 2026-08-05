@@ -19,10 +19,15 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg
-      - name: cut final two seconds
+      - name: cut final visible two seconds
         run: |
           mkdir -p assets/images/debug
-          ffmpeg -y -sseof -2 -i assets/video/1210.mp4 \
+          duration=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 assets/video/1210.mp4)
+          black_start=$(ffmpeg -hide_banner -i assets/video/1210.mp4 -vf "blackdetect=d=0.15:pix_th=0.10" -an -f null - 2>&1 | awk -F'black_start:' '/black_start:/{split($2,a," "); value=a[1]} END{print value}')
+          end=${black_start:-$duration}
+          start=$(awk -v e="$end" 'BEGIN { s=e-2; if (s<0) s=0; printf "%.3f", s }')
+          echo "duration=$duration black_start=$black_start cut_start=$start cut_end=$end"
+          ffmpeg -y -ss "$start" -i assets/video/1210.mp4 \
             -t 2 \
             -vf "scale='min(1280,iw)':-2" \
             -c:v libx264 -preset medium -crf 27 -movflags +faststart \
@@ -43,5 +48,5 @@ jobs:
           git config user.name "6months automation"
           git config user.email "actions@users.noreply.github.com"
           git add assets/video/hero.mp4 assets/images/debug/hero-tail-contact.jpg
-          git commit -m "use final two seconds for hero" || exit 0
+          git commit -m "trim hero before final black frames" || exit 0
           git push
