@@ -19,16 +19,21 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg
-      - name: create lightweight hero video
+      - name: cut final two seconds
         run: |
-          ffmpeg -y -i assets/video/1210.mp4 \
+          mkdir -p assets/images/debug
+          ffmpeg -y -sseof -2 -i assets/video/1210.mp4 \
+            -t 2 \
             -vf "scale='min(1280,iw)':-2" \
-            -c:v libx264 -preset medium -crf 29 -movflags +faststart \
+            -c:v libx264 -preset medium -crf 27 -movflags +faststart \
             -an assets/video/hero.mp4
-      - name: commit optimized video
+          ffmpeg -y -i assets/video/hero.mp4 \
+            -vf "fps=4,scale=360:-2,tile=4x2:padding=8:margin=8" \
+            -frames:v 1 -q:v 2 assets/images/debug/hero-tail-contact.jpg
+      - name: commit hero and preview
         run: |
           git config user.name "6months automation"
           git config user.email "actions@users.noreply.github.com"
-          git add assets/video/hero.mp4
-          git commit -m "add optimized hero video" || exit 0
+          git add assets/video/hero.mp4 assets/images/debug/hero-tail-contact.jpg
+          git commit -m "use final two seconds for hero" || exit 0
           git push
