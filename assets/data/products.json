@@ -1,8 +1,8 @@
 [
   {
     "id": "archive-reflective-jeans",
-    "name": "archive reflective jeans",
-    "badge": "archive",
+    "name": "reflective jeans",
+    "badge": "архив",
     "price": 3500,
     "description": "широкие чёрные джинсы со светоотражающей тканью под дистресс-прорезями",
     "characteristics": [
@@ -20,15 +20,18 @@
       "assets/images/products/archive-reflective-jeans-5.jpg"
     ],
     "sizes": [
-      { "label": "one size", "stock": null }
+      { "label": "s", "stock": 0 },
+      { "label": "m", "stock": 0 },
+      { "label": "l", "stock": 0 },
+      { "label": "xl", "stock": 0 }
     ],
     "visible": true,
     "madeToOrder": false
   },
   {
     "id": "archive-distressed-tee",
-    "name": "archive distressed tee",
-    "badge": "archive",
+    "name": "distressed tee",
+    "badge": "архив",
     "price": 1500,
     "description": "чёрная оверсайз-футболка с ручной дистресс-обработкой и прорезями",
     "characteristics": [
@@ -44,7 +47,10 @@
       "assets/images/products/archive-distressed-tee-3.jpg"
     ],
     "sizes": [
-      { "label": "one size", "stock": null }
+      { "label": "s", "stock": 0 },
+      { "label": "m", "stock": 0 },
+      { "label": "l", "stock": 0 },
+      { "label": "xl", "stock": 0 }
     ],
     "visible": true,
     "madeToOrder": false
@@ -52,7 +58,7 @@
   {
     "id": "custom-order",
     "name": "custom order",
-    "badge": "individual",
+    "badge": "индивидуальный заказ",
     "price": null,
     "priceText": "договорная",
     "description": "индивидуальная вещь или переделка по вашей идее",
