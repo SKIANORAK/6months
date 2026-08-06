@@ -28,8 +28,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: tools/3d-studio/package-lock.json
       - name: Install
         run: npm install
       - name: Typecheck
