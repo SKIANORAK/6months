@@ -1,8 +1,13 @@
 const TELEGRAM_USERNAME = 'SKIANORAK';
+const MOBILE_BASIC = /\/mobilebasic(?:\/|$)/.test(window.location.pathname);
 
 function getCart(){try{return JSON.parse(localStorage.getItem('cart_guest'))||[]}catch{return[]}}
 function saveCart(cart){localStorage.setItem('cart_guest',JSON.stringify(cart))}
 function money(value){return `${new Intl.NumberFormat('ru-RU').format(value)} ₽`}
+function cartImage(path){
+  if(!path||/^(?:[a-z]+:|\/|#)/i.test(path))return path;
+  return MOBILE_BASIC?`../${path}`:path;
+}
 
 function renderCart(){
   const itemsNode=document.getElementById('cart-items');
@@ -17,7 +22,7 @@ function renderCart(){
   }
   itemsNode.innerHTML=cart.map((item,index)=>`
     <article class="cart-item">
-      <img src="${item.image}" alt="${item.name}">
+      <img src="${cartImage(item.image)}" alt="${item.name}">
       <div>
         <h2>${item.name}</h2>
         <p>размер: ${item.size}</p>
