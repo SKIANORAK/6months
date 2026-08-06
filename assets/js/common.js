@@ -64,7 +64,8 @@ function mountFooter() {
 
   document.querySelectorAll('[data-view-switch]').forEach((link) => {
     link.addEventListener('click', () => {
-      localStorage.setItem(VERSION_STORAGE_KEY, link.dataset.viewSwitch);
+      try { localStorage.setItem(VERSION_STORAGE_KEY, link.dataset.viewSwitch); }
+      catch { /* the query parameter still switches the version */ }
     });
   });
 }
