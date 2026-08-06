@@ -22,7 +22,11 @@
 
     <section class="login-panel" id="login-panel">
       <h2>вход владельца</h2>
-      <p class="admin-note"><strong>обычный пароль здесь не используется.</strong> нужен личный github token с доступом только к репозиторию 6months и правом contents: read and write. token хранится только до закрытия вкладки.</p>
+      <p class="admin-note"><strong>обычный пароль здесь не используется.</strong> нужен личный fine-grained github token владельца с правом contents: read and write. token хранится только до закрытия вкладки.</p>
+      <div class="repo-lock">
+        доступ зафиксирован для
+        <strong>arcyuke / 6months</strong>
+      </div>
       <details class="token-help">
         <summary>как создать token</summary>
         <ol>
@@ -33,8 +37,6 @@
           <li>создать token и вставить его ниже</li>
         </ol>
       </details>
-      <label>github логин<input id="owner" value="arcyuke" autocomplete="username"></label>
-      <label>репозиторий<input id="repo" value="6months"></label>
       <label>github token<input id="token" type="password" autocomplete="current-password" placeholder="github_pat_..."></label>
       <button id="login" class="admin-button">войти</button>
       <div class="admin-message" id="login-message"></div>
@@ -43,7 +45,10 @@
     <section id="editor" hidden>
       <div class="editor-toolbar">
         <p id="editor-status">каталог загружен</p>
-        <button id="save" class="admin-button">сохранить изменения</button>
+        <div class="editor-actions">
+          <button id="logout" class="admin-button secondary">выйти</button>
+          <button id="save" class="admin-button">сохранить изменения</button>
+        </div>
       </div>
       <div id="product-editor" class="product-editor"></div>
       <div class="admin-message" id="save-message"></div>
