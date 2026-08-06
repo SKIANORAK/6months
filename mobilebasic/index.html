@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="6 months — мобильный каталог одежды">
+  <title>6 months</title>
+  <script src="../assets/js/view-router.js"></script>
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <link rel="stylesheet" href="../assets/css/mobilebasic.css">
+  <link rel="icon" href="../assets/images/brand/favicon-32x32.png" type="image/png">
+</head>
+<body class="mobile-basic">
+  <header class="site-header">
+    <nav class="nav-shell" aria-label="главная навигация">
+      <a class="logo" href="index.html">6 months</a>
+      <div class="nav-links">
+        <a href="#catalog">одежда</a>
+        <a href="bag.html">корзина (<span id="cart-count">0</span>)</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-media" aria-hidden="true">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="../assets/video/hero.mp4?v=clock2" type="video/mp4">
+        </video>
+      </div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <p class="hero-kicker">одежда ручной работы</p>
+        <h1>6 months</h1>
+        <p>архивные модели, единичные изделия и индивидуальные заказы</p>
+        <div class="hero-actions">
+          <a class="button button-light" href="#catalog">каталог</a>
+          <a class="button button-ghost" href="https://t.me/highallowww" target="_blank" rel="noreferrer">telegram</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="catalog-section" id="catalog" data-reveal>
+      <div class="section-heading"><h2>одежда</h2></div>
+      <div class="products-grid" id="products-grid" aria-live="polite"></div>
+    </section>
+
+    <section class="process-section" data-reveal>
+      <div><h2>новые модели — по одной</h2></div>
+      <p>единичные изделия, ручные переделки и индивидуальные заказы. процесс и новые позиции публикуются в telegram.</p>
+    </section>
+  </main>
+
+  <div data-site-footer></div>
+  <div id="custom-alert" class="custom-alert" role="status" aria-live="polite"></div>
+  <script src="../assets/js/common.js"></script>
+  <script src="../assets/js/site.js"></script>
+</body>
+</html>
