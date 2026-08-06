@@ -3,13 +3,23 @@
   const params = new URLSearchParams(window.location.search);
   const requested = params.get('view');
 
+  function savePreference(value) {
+    try { localStorage.setItem(STORAGE_KEY, value); }
+    catch { /* routing still works without persistent storage */ }
+  }
+
+  function readPreference() {
+    try { return localStorage.getItem(STORAGE_KEY); }
+    catch { return null; }
+  }
+
   if (requested === 'desktop' || requested === 'mobile') {
-    localStorage.setItem(STORAGE_KEY, requested);
+    savePreference(requested);
   }
 
   const preference = requested === 'desktop' || requested === 'mobile'
     ? requested
-    : localStorage.getItem(STORAGE_KEY);
+    : readPreference();
 
   const path = window.location.pathname;
   const onMobileVersion = /\/mobilebasic(?:\/|$)/.test(path);
