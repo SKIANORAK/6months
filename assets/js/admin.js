@@ -65,6 +65,27 @@ async function request(url, options = {}) {
   return payload;
 }
 
+async function verifyWritePermission() {
+  try {
+    const blob = await request(api('/git/blobs'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        content: '6months-admin-write-check',
+        encoding: 'utf-8'
+      })
+    });
+    if (!blob?.sha) throw new Error('github не подтвердил право записи');
+  } catch (error) {
+    if (error.status === 401 || error.status === 403) {
+      const denied = new Error('у token нет права contents: read and write для arcyuke/6months');
+      denied.status = error.status;
+      throw denied;
+    }
+    throw error;
+  }
+}
+
 async function verifyAccess() {
   const user = await request('https://api.github.com/user');
   if ((user.login || '').toLowerCase() !== OWNER) {
@@ -77,6 +98,7 @@ async function verifyAccess() {
     throw new Error(`у аккаунта ${OWNER} нет права записи в ${OWNER}/${REPO}`);
   }
 
+  await verifyWritePermission();
   session.login = user.login;
   return user;
 }
