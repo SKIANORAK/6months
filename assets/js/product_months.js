@@ -1,4 +1,6 @@
-const DATA_URL = 'assets/data/products.json';
+const MOBILE_BASIC = /\/mobilebasic(?:\/|$)/.test(window.location.pathname);
+const SITE_PREFIX = MOBILE_BASIC ? '../' : '';
+const DATA_URL = `${SITE_PREFIX}assets/data/products.json`;
 const TELEGRAM_USERNAME = 'SKIANORAK';
 let currentProduct = null;
 let currentImage = 0;
@@ -6,6 +8,11 @@ let selectedSize = '';
 let touchStartX = 0;
 
 const money = (value) => value === null ? '' : `${new Intl.NumberFormat('ru-RU').format(value)} ₽`;
+
+function assetUrl(path) {
+  if (!path || /^(?:[a-z]+:|\/|#)/i.test(path)) return path;
+  return `${SITE_PREFIX}${path}`;
+}
 
 function getCart() {
   try { return JSON.parse(localStorage.getItem('cart_guest')) || []; }
@@ -50,6 +57,34 @@ function sizeMarkup(product) {
     </div>`;
 }
 
+function sizeChartMarkup(product) {
+  const chart = product.sizeChart;
+  if (product.madeToOrder || !chart) return '';
+
+  const columns = Array.isArray(chart.columns) ? chart.columns : [];
+  const rows = Array.isArray(chart.rows) ? chart.rows : [];
+  const table = rows.length && columns.length ? `
+    <div class="size-chart-scroll">
+      <table>
+        <thead><tr>${columns.map((column) => `<th scope="col">${column}</th>`).join('')}</tr></thead>
+        <tbody>
+          ${rows.map((row) => `<tr>${row.map((value, index) => index === 0 ? `<th scope="row">${value}</th>` : `<td>${value}</td>`).join('')}</tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    ${chart.unit ? `<p class="size-chart-unit">значения указаны в ${chart.unit}</p>` : ''}` : `
+    <p class="size-chart-empty">${chart.note || 'замеры будут добавлены после измерения изделия'}</p>`;
+
+  return `
+    <details class="size-chart">
+      <summary>
+        <span>таблица размеров</span>
+        <span class="size-chart-arrow" aria-hidden="true">⌄</span>
+      </summary>
+      <div class="size-chart-content">${table}</div>
+    </details>`;
+}
+
 function actionMarkup(product) {
   if (product.madeToOrder) {
     const text = encodeURIComponent('привет. хочу обсудить индивидуальный заказ от 6 months');
@@ -66,16 +101,17 @@ function renderProduct(product) {
   selectedSize = '';
   const page = document.getElementById('product-page');
   const price = product.priceText || money(product.price);
+  const images = (product.images || []).map(assetUrl);
   page.innerHTML = `
     <div class="product-layout">
       <section class="product-gallery">
         <div class="gallery-main" id="gallery-main">
-          <img id="main-product-image" src="${product.images[0]}" alt="${product.name}" decoding="async">
-          ${product.images.length > 1 ? '<button class="gallery-arrow prev" id="prev-image" aria-label="предыдущее фото">‹</button><button class="gallery-arrow next" id="next-image" aria-label="следующее фото">›</button>' : ''}
-          <div class="gallery-counter" id="gallery-counter">1 / ${product.images.length}</div>
+          <img id="main-product-image" src="${images[0]}" alt="${product.name}" decoding="async">
+          ${images.length > 1 ? '<button class="gallery-arrow prev" id="prev-image" aria-label="предыдущее фото">‹</button><button class="gallery-arrow next" id="next-image" aria-label="следующее фото">›</button>' : ''}
+          <div class="gallery-counter" id="gallery-counter">1 / ${images.length}</div>
         </div>
         <div class="gallery-thumbs">
-          ${product.images.map((src, index) => `<button class="gallery-thumb ${index === 0 ? 'active' : ''}" data-index="${index}" aria-label="фото ${index + 1}"><img src="${src}" alt="${product.name}, фото ${index + 1}" loading="lazy" decoding="async"></button>`).join('')}
+          ${images.map((src, index) => `<button class="gallery-thumb ${index === 0 ? 'active' : ''}" data-index="${index}" aria-label="фото ${index + 1}"><img src="${src}" alt="${product.name}, фото ${index + 1}" loading="lazy" decoding="async"></button>`).join('')}
         </div>
       </section>
       <section class="product-info">
@@ -83,6 +119,7 @@ function renderProduct(product) {
         <h1 class="detail-title">${product.name}</h1>
         <div class="detail-price">${price}</div>
         <p class="detail-description">${product.description}</p>
+        ${sizeChartMarkup(product)}
         ${sizeMarkup(product)}
         ${actionMarkup(product)}
         <div class="detail-section">
@@ -95,6 +132,8 @@ function renderProduct(product) {
         </div>
       </section>
     </div>`;
+
+  currentProduct.resolvedImages = images;
 
   document.querySelectorAll('.gallery-thumb').forEach((button) => {
     button.addEventListener('click', () => setImage(Number(button.dataset.index)));
@@ -130,17 +169,18 @@ function selectSize(button) {
 }
 
 function setImage(index) {
-  if (!currentProduct?.images?.length) return;
-  currentImage = (index + currentProduct.images.length) % currentProduct.images.length;
+  const images = currentProduct?.resolvedImages || [];
+  if (!images.length) return;
+  currentImage = (index + images.length) % images.length;
   const image = document.getElementById('main-product-image');
   image?.classList.add('is-changing');
   window.setTimeout(() => {
-    if (image) image.src = currentProduct.images[currentImage];
+    if (image) image.src = images[currentImage];
     image?.classList.remove('is-changing');
   }, 90);
   document.querySelectorAll('.gallery-thumb').forEach((node, idx) => node.classList.toggle('active', idx === currentImage));
   const counter = document.getElementById('gallery-counter');
-  if (counter) counter.textContent = `${currentImage + 1} / ${currentProduct.images.length}`;
+  if (counter) counter.textContent = `${currentImage + 1} / ${images.length}`;
 }
 
 function addToCart() {
@@ -162,7 +202,7 @@ function addToCart() {
     name: currentProduct.name,
     price: currentProduct.price,
     size: selectedSize,
-    image: currentProduct.images[0],
+    image: new URL(assetUrl(currentProduct.images[0]), window.location.href).href,
     quantity: 1,
     stock
   });
@@ -188,7 +228,8 @@ async function init() {
 }
 
 document.addEventListener('keydown', (event) => {
-  if (!currentProduct || currentProduct.images.length < 2) return;
+  const images = currentProduct?.resolvedImages || [];
+  if (images.length < 2) return;
   if (event.key === 'ArrowLeft') setImage(currentImage - 1);
   if (event.key === 'ArrowRight') setImage(currentImage + 1);
 });
