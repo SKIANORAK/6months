@@ -1,0 +1,27 @@
+/* точечные мобильные правки: отступ каталога и подвал у нижнего края */
+body.mobile-basic{
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+}
+
+.mobile-basic > header{
+  flex:0 0 auto;
+}
+
+.mobile-basic > main{
+  flex:1 0 auto;
+}
+
+.mobile-basic > [data-site-footer]{
+  margin-top:auto;
+  flex:0 0 auto;
+}
+
+.mobile-basic .catalog-section{
+  margin-top:96px;
+}
+
+@supports not (min-height:100svh){
+  body.mobile-basic{min-height:100vh}
+}
