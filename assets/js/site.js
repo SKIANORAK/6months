@@ -1,6 +1,7 @@
 const MOBILE_BASIC = /\/mobilebasic(?:\/|$)/.test(window.location.pathname);
 const SITE_PREFIX = MOBILE_BASIC ? '../' : '';
 const DATA_URL = `${SITE_PREFIX}assets/data/products.json`;
+const REDUCED_CARD_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const money = (value) => value === null ? '' : `${new Intl.NumberFormat('ru-RU').format(value)} ₽`;
 
@@ -31,12 +32,12 @@ function stockSummary(product) {
   return { text: `в наличии: ${total} шт.`, className: 'available' };
 }
 
-function productCard(product) {
+function productCard(product, index) {
   const stock = stockSummary(product);
   const image = assetUrl(product.images?.[0] || '');
   const price = product.priceText || money(product.price);
   return `
-    <article class="product-card">
+    <article class="product-card" style="--card-index:${index}">
       <a class="product-link" href="${productHref(product.id)}">
         <div class="product-image">
           <img src="${image}" alt="${product.name}" loading="lazy" decoding="async">
@@ -55,14 +56,58 @@ function productCard(product) {
 }
 
 function animateCards() {
-  document.querySelectorAll('.product-card').forEach((card, index) => {
-    window.setTimeout(() => card.classList.add('is-visible'), 60 * index);
+  const cards = [...document.querySelectorAll('.product-card')];
+  if (!cards.length) return;
+
+  cards.forEach((card, index) => {
+    card.style.setProperty('--card-delay', `${Math.min(index, 5) * 65}ms`);
+  });
+
+  if (!('IntersectionObserver' in window) || REDUCED_CARD_MOTION) {
+    cards.forEach((card) => card.classList.add('is-visible'));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-visible');
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.16, rootMargin: '0px 0px -20px' });
+
+  cards.forEach((card) => observer.observe(card));
+}
+
+function initImageStates() {
+  document.querySelectorAll('.product-card').forEach((card) => {
+    const image = card.querySelector('img');
+    if (!image) return;
+    const ready = () => card.classList.add('image-ready');
+    if (image.complete) ready();
+    else {
+      image.addEventListener('load', ready, { once: true });
+      image.addEventListener('error', ready, { once: true });
+    }
   });
 }
 
 function initCardMotion() {
-  if (!window.matchMedia('(pointer:fine)').matches || MOBILE_BASIC) return;
-  document.querySelectorAll('.product-card').forEach((card) => {
+  const cards = document.querySelectorAll('.product-card');
+
+  if (MOBILE_BASIC) {
+    cards.forEach((card) => {
+      const release = () => card.classList.remove('is-pressed');
+      card.addEventListener('pointerdown', () => card.classList.add('is-pressed'));
+      card.addEventListener('pointerup', release);
+      card.addEventListener('pointercancel', release);
+      card.addEventListener('pointerleave', release);
+    });
+    return;
+  }
+
+  if (!window.matchMedia('(pointer:fine)').matches || REDUCED_CARD_MOTION) return;
+  cards.forEach((card) => {
     card.addEventListener('mousemove', (event) => {
       const rect = card.getBoundingClientRect();
       const x = (event.clientX - rect.left) / rect.width - .5;
@@ -86,8 +131,12 @@ async function renderProducts() {
     const response = await fetch(DATA_URL, { cache: 'no-cache' });
     if (!response.ok) throw new Error('catalog load failed');
     const products = await response.json();
-    grid.innerHTML = products.filter((product) => product.visible !== false).map(productCard).join('');
+    grid.innerHTML = products
+      .filter((product) => product.visible !== false)
+      .map((product, index) => productCard(product, index))
+      .join('');
     requestAnimationFrame(() => {
+      initImageStates();
       animateCards();
       initCardMotion();
     });

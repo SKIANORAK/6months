@@ -1,6 +1,9 @@
 const IS_MOBILE_BASIC = /\/mobilebasic(?:\/|$)/.test(window.location.pathname);
 const SITE_ROOT = IS_MOBILE_BASIC ? '../' : '';
 const VERSION_STORAGE_KEY = '6months-view-mode';
+const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+document.documentElement.classList.add('has-live-motion');
 
 function pageForVersion(targetVersion) {
   const path = window.location.pathname;
@@ -70,6 +73,50 @@ function mountFooter() {
   });
 }
 
+function getSharedCartCount() {
+  try {
+    const cart = JSON.parse(localStorage.getItem('cart_guest')) || [];
+    return cart.reduce((sum, item) => sum + Math.max(0, Number(item.quantity || 0)), 0);
+  } catch {
+    return 0;
+  }
+}
+
+function mountMobileCartDock() {
+  if (!IS_MOBILE_BASIC || /\/mobilebasic\/bag\.html$/.test(window.location.pathname)) return;
+
+  const dock = document.createElement('a');
+  dock.className = 'mobile-cart-dock';
+  dock.href = 'bag.html';
+  dock.setAttribute('aria-label', 'открыть корзину');
+  dock.innerHTML = '<span class="mobile-cart-label">корзина</span><span class="mobile-cart-count" id="cart-count">0</span>';
+  document.body.append(dock);
+
+  const countNode = dock.querySelector('.mobile-cart-count');
+  const update = () => {
+    const next = String(getSharedCartCount());
+    if (countNode.textContent === next) return;
+    countNode.textContent = next;
+    dock.classList.remove('is-pulsing');
+    void dock.offsetWidth;
+    dock.classList.add('is-pulsing');
+  };
+
+  update();
+  window.addEventListener('storage', update);
+  window.addEventListener('focus', update);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) update();
+  });
+
+  const observer = new MutationObserver(() => {
+    dock.classList.remove('is-pulsing');
+    void dock.offsetWidth;
+    dock.classList.add('is-pulsing');
+  });
+  observer.observe(countNode, { childList: true, characterData: true, subtree: true });
+}
+
 function initHeader() {
   const header = document.querySelector('.site-header');
   if (!header) return;
@@ -81,10 +128,13 @@ function initHeader() {
 function initReveal() {
   const nodes = document.querySelectorAll('[data-reveal]');
   if (!nodes.length) return;
-  if (!('IntersectionObserver' in window)) {
+  nodes.forEach((node, index) => node.style.setProperty('--reveal-delay', `${Math.min(index, 5) * 70}ms`));
+
+  if (!('IntersectionObserver' in window) || REDUCED_MOTION) {
     nodes.forEach((node) => node.classList.add('is-visible'));
     return;
   }
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
@@ -103,9 +153,99 @@ function initHeroVideo() {
   else video.addEventListener('loadeddata', ready, { once: true });
 }
 
+function initHeroMotion() {
+  const hero = document.querySelector('.hero');
+  if (!hero) return;
+  hero.classList.add('is-entering');
+  if (REDUCED_MOTION) return;
+
+  let frame = 0;
+  const update = () => {
+    frame = 0;
+    const progress = Math.min(1, Math.max(0, window.scrollY / Math.max(hero.offsetHeight, 1)));
+    hero.style.setProperty('--hero-media-y', `${progress * 34}px`);
+    hero.style.setProperty('--hero-media-scale', String(1.055 + progress * 0.035));
+    hero.style.setProperty('--hero-content-y', `${progress * -18}px`);
+    hero.style.setProperty('--hero-content-opacity', String(1 - progress * 0.72));
+  };
+
+  const schedule = () => {
+    if (frame) return;
+    frame = requestAnimationFrame(update);
+  };
+
+  update();
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule, { passive: true });
+}
+
+function initScrollProgress() {
+  if (REDUCED_MOTION) return;
+  const bar = document.createElement('div');
+  bar.className = 'scroll-progress';
+  bar.setAttribute('aria-hidden', 'true');
+  document.body.append(bar);
+
+  let frame = 0;
+  const update = () => {
+    frame = 0;
+    const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    bar.style.transform = `scaleX(${Math.min(1, window.scrollY / max)})`;
+  };
+  const schedule = () => {
+    if (frame) return;
+    frame = requestAnimationFrame(update);
+  };
+  update();
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule, { passive: true });
+}
+
+function initCatalogNavigation() {
+  const catalog = document.getElementById('catalog');
+  if (!catalog) return;
+
+  document.querySelectorAll('a[href="#catalog"]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      catalog.scrollIntoView({ behavior: REDUCED_MOTION ? 'auto' : 'smooth', block: 'start' });
+      window.setTimeout(() => {
+        catalog.classList.remove('catalog-focus');
+        void catalog.offsetWidth;
+        catalog.classList.add('catalog-focus');
+      }, REDUCED_MOTION ? 0 : 520);
+    });
+  });
+}
+
+function initTapEffects() {
+  if (REDUCED_MOTION) return;
+  const selector = '.button,.primary-action,.checkout-button,.size-option,.mobile-cart-dock,.product-link';
+
+  document.addEventListener('pointerdown', (event) => {
+    const target = event.target.closest(selector);
+    if (!target) return;
+    const rect = target.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    const size = Math.max(rect.width, rect.height) * 1.35;
+    ripple.className = 'tap-ripple';
+    ripple.style.width = `${size}px`;
+    ripple.style.height = `${size}px`;
+    ripple.style.left = `${event.clientX - rect.left - size / 2}px`;
+    ripple.style.top = `${event.clientY - rect.top - size / 2}px`;
+    target.append(ripple);
+    ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   mountFooter();
+  mountMobileCartDock();
   initHeader();
   initReveal();
   initHeroVideo();
+  initHeroMotion();
+  initScrollProgress();
+  initCatalogNavigation();
+  initTapEffects();
 });

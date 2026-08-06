@@ -100,6 +100,7 @@ function renderProduct(product) {
   currentImage = 0;
   selectedSize = '';
   const page = document.getElementById('product-page');
+  page.classList.remove('product-ready');
   const price = product.priceText || money(product.price);
   const images = (product.images || []).map(assetUrl);
   page.innerHTML = `
@@ -153,11 +154,16 @@ function renderProduct(product) {
     button.addEventListener('click', () => selectSize(button));
   });
   document.getElementById('add-to-cart')?.addEventListener('click', addToCart);
+
+  requestAnimationFrame(() => page.classList.add('product-ready'));
 }
 
 function selectSize(button) {
   selectedSize = button.dataset.size;
   document.querySelectorAll('.size-option').forEach((node) => node.classList.toggle('is-selected', node === button));
+  button.classList.remove('selection-pop');
+  void button.offsetWidth;
+  button.classList.add('selection-pop');
   const stock = Number(button.dataset.stock || 0);
   const stockNode = document.getElementById('selected-stock');
   const addButton = document.getElementById('add-to-cart');
