@@ -1,6 +1,18 @@
-const DATA_URL = 'assets/data/products.json';
+const MOBILE_BASIC = /\/mobilebasic(?:\/|$)/.test(window.location.pathname);
+const SITE_PREFIX = MOBILE_BASIC ? '../' : '';
+const DATA_URL = `${SITE_PREFIX}assets/data/products.json`;
 
 const money = (value) => value === null ? '' : `${new Intl.NumberFormat('ru-RU').format(value)} ₽`;
+
+function assetUrl(path) {
+  if (!path || /^(?:[a-z]+:|\/|#)/i.test(path)) return path;
+  return `${SITE_PREFIX}${path}`;
+}
+
+function productHref(id) {
+  const page = MOBILE_BASIC ? 'product.html' : 'product_months.html';
+  return `${page}?id=${encodeURIComponent(id)}`;
+}
 
 function getCart() {
   try { return JSON.parse(localStorage.getItem('cart_guest')) || []; }
@@ -21,11 +33,11 @@ function stockSummary(product) {
 
 function productCard(product) {
   const stock = stockSummary(product);
-  const image = product.images?.[0] || '';
+  const image = assetUrl(product.images?.[0] || '');
   const price = product.priceText || money(product.price);
   return `
     <article class="product-card">
-      <a class="product-link" href="product_months.html?id=${encodeURIComponent(product.id)}">
+      <a class="product-link" href="${productHref(product.id)}">
         <div class="product-image">
           <img src="${image}" alt="${product.name}" loading="lazy" decoding="async">
           ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
@@ -49,7 +61,7 @@ function animateCards() {
 }
 
 function initCardMotion() {
-  if (!window.matchMedia('(pointer:fine)').matches) return;
+  if (!window.matchMedia('(pointer:fine)').matches || MOBILE_BASIC) return;
   document.querySelectorAll('.product-card').forEach((card) => {
     card.addEventListener('mousemove', (event) => {
       const rect = card.getBoundingClientRect();
