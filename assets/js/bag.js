@@ -1,8 +1,13 @@
 const TELEGRAM_USERNAME = 'SKIANORAK';
+const MOBILE_BASIC = /\/mobilebasic(?:\/|$)/.test(window.location.pathname);
 
 function getCart(){try{return JSON.parse(localStorage.getItem('cart_guest'))||[]}catch{return[]}}
 function saveCart(cart){localStorage.setItem('cart_guest',JSON.stringify(cart))}
 function money(value){return `${new Intl.NumberFormat('ru-RU').format(value)} ₽`}
+function cartImage(path){
+  if(!path||/^(?:[a-z]+:|\/|#)/i.test(path))return path;
+  return MOBILE_BASIC?`../${path}`:path;
+}
 
 function renderCart(){
   const itemsNode=document.getElementById('cart-items');
@@ -17,7 +22,7 @@ function renderCart(){
   }
   itemsNode.innerHTML=cart.map((item,index)=>`
     <article class="cart-item">
-      <img src="${item.image}" alt="${item.name}">
+      <img src="${cartImage(item.image)}" alt="${item.name}">
       <div>
         <h2>${item.name}</h2>
         <p>размер: ${item.size}</p>
@@ -55,7 +60,7 @@ function checkout(){
   if(!cart.length)return;
   if(contact.length<3){alert('укажите telegram или телефон');return}
   const total=cart.reduce((sum,item)=>sum+item.price*item.quantity,0);
-  const lines=['привет. хочу оформить заказ на сайте «пол года».','',...cart.map((item,index)=>`${index+1}. ${item.name}\nразмер: ${item.size}\nколичество: ${item.quantity}\nсумма: ${money(item.price*item.quantity)}`),'',`итого: ${money(total)}`,`контакт: ${contact}`];
+  const lines=['привет. хочу оформить заказ на сайте 6 months.','',...cart.map((item,index)=>`${index+1}. ${item.name}\nразмер: ${item.size}\nколичество: ${item.quantity}\nсумма: ${money(item.price*item.quantity)}`),'',`итого: ${money(total)}`,`контакт: ${contact}`];
   const url=`https://t.me/${TELEGRAM_USERNAME}?text=${encodeURIComponent(lines.join('\n'))}`;
   window.open(url,'_blank','noopener');
 }

@@ -2,23 +2,20 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="6 months — независимый бренд одежды, архивные и единичные вещи ручной работы.">
-  <meta property="og:title" content="6 months">
-  <meta property="og:description" content="архивные и единичные вещи ручной работы">
-  <meta property="og:type" content="website">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="6 months — мобильный каталог одежды">
   <title>6 months</title>
-  <script src="assets/js/view-router.js"></script>
-  <link rel="stylesheet" href="assets/css/site.css">
-  <link rel="icon" href="assets/images/brand/favicon-32x32.png" type="image/png">
+  <script src="../assets/js/view-router.js"></script>
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <link rel="stylesheet" href="../assets/css/mobilebasic.css">
+  <link rel="icon" href="../assets/images/brand/favicon-32x32.png" type="image/png">
 </head>
-<body>
+<body class="mobile-basic">
   <header class="site-header">
     <nav class="nav-shell" aria-label="главная навигация">
       <a class="logo" href="index.html">6 months</a>
       <div class="nav-links">
         <a href="#catalog">одежда</a>
-        <a href="about.html">о бренде</a>
         <a href="bag.html">корзина (<span id="cart-count">0</span>)</a>
       </div>
     </nav>
@@ -28,7 +25,7 @@
     <section class="hero">
       <div class="hero-media" aria-hidden="true">
         <video autoplay muted loop playsinline preload="metadata">
-          <source src="assets/video/hero.mp4?v=clock2" type="video/mp4">
+          <source src="../assets/video/hero.mp4?v=clock2" type="video/mp4">
         </video>
       </div>
       <div class="hero-overlay"></div>
@@ -56,7 +53,7 @@
 
   <div data-site-footer></div>
   <div id="custom-alert" class="custom-alert" role="status" aria-live="polite"></div>
-  <script src="assets/js/common.js"></script>
-  <script src="assets/js/site.js"></script>
+  <script src="../assets/js/common.js"></script>
+  <script src="../assets/js/site.js"></script>
 </body>
 </html>

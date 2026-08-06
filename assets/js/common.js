@@ -1,4 +1,35 @@
-const SITE_FOOTER = `
+const IS_MOBILE_BASIC = /\/mobilebasic(?:\/|$)/.test(window.location.pathname);
+const SITE_ROOT = IS_MOBILE_BASIC ? '../' : '';
+const VERSION_STORAGE_KEY = '6months-view-mode';
+
+function pageForVersion(targetVersion) {
+  const path = window.location.pathname;
+  const params = new URLSearchParams(window.location.search);
+  params.delete('view');
+  params.set('view', targetVersion);
+  const search = `?${params.toString()}`;
+
+  if (targetVersion === 'desktop') {
+    if (/\/mobilebasic\/product\.html$/.test(path)) return `../product_months.html${search}`;
+    if (/\/mobilebasic\/bag\.html$/.test(path)) return `../bag.html${search}`;
+    if (/\/mobilebasic\/about\.html$/.test(path)) return `../about.html${search}`;
+    return `../index.html${search}`;
+  }
+
+  if (/\/product_months\.html$/.test(path)) return `mobilebasic/product.html${search}`;
+  if (/\/bag\.html$/.test(path)) return `mobilebasic/bag.html${search}`;
+  if (/\/about\.html$/.test(path)) return `mobilebasic/about.html${search}`;
+  return `mobilebasic/${search}`;
+}
+
+function footerMarkup() {
+  const aboutHref = 'about.html';
+  const adminHref = `${SITE_ROOT}admin.html`;
+  const switchMode = IS_MOBILE_BASIC ? 'desktop' : 'mobile';
+  const switchLabel = IS_MOBILE_BASIC ? 'полная версия' : 'мобильная версия';
+  const switchHref = pageForVersion(switchMode);
+
+  return `
 <footer class="main-footer">
   <div class="footer-content">
     <div class="footer-section">
@@ -13,19 +44,29 @@ const SITE_FOOTER = `
     </div>
     <div class="footer-section">
       <h3>информация</h3>
-      <p><a href="about.html">о бренде</a></p>
-      <p><a href="admin.html" class="admin-entry">глав.net</a></p>
+      <p><a href="${aboutHref}">о бренде</a></p>
+      <p><a href="${switchHref}" data-view-switch="${switchMode}">${switchLabel}</a></p>
+      <p><a href="${adminHref}" class="admin-entry">глав.net</a></p>
     </div>
   </div>
   <div class="footer-bottom">© <span data-current-year></span> 6 months</div>
 </footer>`;
+}
 
 function mountFooter() {
   document.querySelectorAll('[data-site-footer]').forEach((node) => {
-    node.innerHTML = SITE_FOOTER;
+    node.innerHTML = footerMarkup();
   });
+
   document.querySelectorAll('[data-current-year]').forEach((node) => {
     node.textContent = new Date().getFullYear();
+  });
+
+  document.querySelectorAll('[data-view-switch]').forEach((link) => {
+    link.addEventListener('click', () => {
+      try { localStorage.setItem(VERSION_STORAGE_KEY, link.dataset.viewSwitch); }
+      catch { /* the query parameter still switches the version */ }
+    });
   });
 }
 
