@@ -55,7 +55,7 @@ function checkout(){
   if(!cart.length)return;
   if(contact.length<3){alert('укажите telegram или телефон');return}
   const total=cart.reduce((sum,item)=>sum+item.price*item.quantity,0);
-  const lines=['привет. хочу оформить заказ на сайте «пол года».','',...cart.map((item,index)=>`${index+1}. ${item.name}\nразмер: ${item.size}\nколичество: ${item.quantity}\nсумма: ${money(item.price*item.quantity)}`),'',`итого: ${money(total)}`,`контакт: ${contact}`];
+  const lines=['привет. хочу оформить заказ на сайте 6 months.','',...cart.map((item,index)=>`${index+1}. ${item.name}\nразмер: ${item.size}\nколичество: ${item.quantity}\nсумма: ${money(item.price*item.quantity)}`),'',`итого: ${money(total)}`,`контакт: ${contact}`];
   const url=`https://t.me/${TELEGRAM_USERNAME}?text=${encodeURIComponent(lines.join('\n'))}`;
   window.open(url,'_blank','noopener');
 }
