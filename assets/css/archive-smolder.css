@@ -1,0 +1,65 @@
+/* 6 months — общий архивный эффект тления текста */
+body :where(h1,h2,h3,h4,p,a,span,button,label,summary,li,strong,small,input,select,textarea,.product-price,.product-stock,.detail-price,.detail-description,.selected-stock,.cart-summary,.footer-bottom,.admin-note,.admin-message){
+  text-shadow:0 0 0 rgba(255,255,255,0);
+  animation:siteTextSmolder 6.2s ease-in-out infinite;
+}
+
+/* текущая главная уже использует archiveSmolder — усиливаем его, чтобы эффект реально читался */
+@keyframes archiveSmolder{
+  0%,100%{text-shadow:0 0 0 rgba(255,255,255,0)}
+  12%{text-shadow:0 0 2px rgba(255,255,255,.12),0 0 7px rgba(255,255,255,.04)}
+  24%{text-shadow:0 0 5px rgba(255,255,255,.24),0 0 16px rgba(255,255,255,.09)}
+  33%{text-shadow:0 0 1px rgba(255,255,255,.08)}
+  48%{text-shadow:0 0 7px rgba(255,255,255,.2),0 0 20px rgba(255,255,255,.07)}
+  58%{text-shadow:0 0 2px rgba(255,255,255,.09)}
+  73%{text-shadow:0 0 9px rgba(255,255,255,.23),0 0 24px rgba(255,255,255,.065)}
+  84%{text-shadow:0 0 3px rgba(255,255,255,.1)}
+}
+
+@keyframes siteTextSmolder{
+  0%,100%{text-shadow:0 0 0 rgba(255,255,255,0)}
+  14%{text-shadow:0 0 1px rgba(255,255,255,.09)}
+  27%{text-shadow:0 0 5px rgba(255,255,255,.21),0 0 14px rgba(255,255,255,.075)}
+  39%{text-shadow:0 0 2px rgba(255,255,255,.08)}
+  56%{text-shadow:0 0 8px rgba(255,255,255,.24),0 0 22px rgba(255,255,255,.08)}
+  68%{text-shadow:0 0 2px rgba(255,255,255,.07)}
+  82%{text-shadow:0 0 6px rgba(255,255,255,.17),0 0 18px rgba(255,255,255,.055)}
+  91%{text-shadow:0 0 1px rgba(255,255,255,.05)}
+}
+
+/* новая логика интро: не перелёт, а медленное выгорание за ~0.9 сек */
+.home-page.brand-burn-active .hero-brand-flight{
+  animation:brandBurnOut .9s cubic-bezier(.42,0,.58,1) both!important;
+  will-change:opacity,filter,transform,letter-spacing,text-shadow;
+}
+
+.home-page.brand-burn-active .home-logo{
+  opacity:0!important;
+  pointer-events:none!important;
+}
+
+.home-page.brand-intro-done .home-logo.is-arrived{
+  animation:headerBrandEmberIn .48s cubic-bezier(.18,.76,.2,1) both,siteTextSmolder 6.2s .65s ease-in-out infinite;
+}
+
+@keyframes brandBurnOut{
+  0%{opacity:1;filter:blur(0);transform:scale(1);letter-spacing:.01em;text-shadow:0 0 0 rgba(255,255,255,0)}
+  18%{opacity:.97;filter:blur(.15px);text-shadow:0 0 4px rgba(255,255,255,.2),0 0 13px rgba(255,255,255,.07)}
+  36%{opacity:.9;filter:blur(.45px);transform:scale(.997);letter-spacing:.018em;text-shadow:0 0 9px rgba(255,255,255,.31),0 0 26px rgba(255,255,255,.1)}
+  53%{opacity:.76;filter:blur(.9px);text-shadow:0 0 3px rgba(255,255,255,.16),0 0 18px rgba(255,255,255,.07)}
+  69%{opacity:.55;filter:blur(1.8px);transform:scale(.991);letter-spacing:.04em;text-shadow:0 0 12px rgba(255,255,255,.27),0 0 32px rgba(255,255,255,.09)}
+  82%{opacity:.27;filter:blur(3.2px);letter-spacing:.075em;text-shadow:0 0 5px rgba(255,255,255,.14)}
+  100%{opacity:0;filter:blur(7px);transform:scale(.975);letter-spacing:.14em;text-shadow:0 0 1px rgba(255,255,255,0)}
+}
+
+@keyframes headerBrandEmberIn{
+  0%{opacity:0;filter:blur(5px);letter-spacing:.1em;text-shadow:0 0 16px rgba(255,255,255,.2)}
+  45%{opacity:.52;filter:blur(2px);text-shadow:0 0 9px rgba(255,255,255,.15)}
+  100%{opacity:1;filter:blur(0);letter-spacing:.04em;text-shadow:0 0 0 rgba(255,255,255,0)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  body :where(h1,h2,h3,h4,p,a,span,button,label,summary,li,strong,small,input,select,textarea,.product-price,.product-stock,.detail-price,.detail-description,.selected-stock,.cart-summary,.footer-bottom,.admin-note,.admin-message){animation:none!important;text-shadow:none!important}
+  .home-page.brand-burn-active .hero-brand-flight{animation:none!important;opacity:0!important}
+  .home-page.brand-intro-done .home-logo.is-arrived{animation:none!important;opacity:1!important;filter:none!important}
+}
