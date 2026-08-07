@@ -32,10 +32,10 @@ function initHomeBrandBurn() {
     brand.addEventListener('animationend', (event) => {
       if (event.animationName === 'brandBurnOut') finish();
     }, { once: true });
-    window.setTimeout(finish, 1040);
+    window.setTimeout(finish, 960);
   };
 
-  window.setTimeout(() => requestAnimationFrame(startBurn), 300);
+  window.setTimeout(() => requestAnimationFrame(startBurn), 120);
 }
 
 document.addEventListener('DOMContentLoaded', initHomeBrandBurn);
