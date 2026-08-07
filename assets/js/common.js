@@ -5,6 +5,22 @@ const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').mat
 
 document.documentElement.classList.add('has-live-motion');
 
+function refreshSmolderStyle() {
+  const href = `${SITE_ROOT}assets/css/archive-smolder.css?v=smolder3`;
+  const existing = [...document.querySelectorAll('link[rel="stylesheet"]')]
+    .find((link) => link.href.includes('/assets/css/archive-smolder.css'));
+  if (existing) {
+    existing.href = href;
+    return;
+  }
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = href;
+  document.head.append(link);
+}
+
+refreshSmolderStyle();
+
 function pageForVersion(targetVersion) {
   const path = window.location.pathname;
   const params = new URLSearchParams(window.location.search);
