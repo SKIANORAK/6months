@@ -55,6 +55,113 @@ function productCard(product, index) {
     </article>`;
 }
 
+function initBrandFlight() {
+  const body = document.body;
+  if (!body.classList.contains('home-page')) return;
+
+  const brand = document.querySelector('.hero-brand-flight');
+  const logo = document.querySelector('.home-logo');
+  if (!brand || !logo) {
+    body.classList.remove('brand-intro-pending');
+    body.classList.add('brand-intro-done');
+    return;
+  }
+
+  const finish = () => {
+    brand.classList.add('is-flown');
+    logo.classList.add('is-arrived');
+    body.classList.remove('brand-intro-pending', 'brand-flight-active');
+    body.classList.add('brand-intro-done');
+  };
+
+  if (REDUCED_CARD_MOTION || typeof brand.animate !== 'function') {
+    finish();
+    return;
+  }
+
+  const run = () => {
+    const sourceRect = brand.getBoundingClientRect();
+    const targetRect = logo.getBoundingClientRect();
+    if (!sourceRect.width || !targetRect.width) {
+      finish();
+      return;
+    }
+
+    const style = window.getComputedStyle(brand);
+    const ghost = document.createElement('div');
+    ghost.className = 'brand-flight-ghost';
+    ghost.textContent = brand.textContent;
+    Object.assign(ghost.style, {
+      position: 'fixed',
+      left: `${sourceRect.left}px`,
+      top: `${sourceRect.top}px`,
+      width: `${sourceRect.width}px`,
+      height: `${sourceRect.height}px`,
+      zIndex: '220',
+      pointerEvents: 'none',
+      whiteSpace: 'nowrap',
+      fontFamily: style.fontFamily,
+      fontStyle: style.fontStyle,
+      fontWeight: style.fontWeight,
+      fontSize: style.fontSize,
+      lineHeight: style.lineHeight,
+      letterSpacing: style.letterSpacing,
+      color: style.color,
+      textAlign: 'center',
+      textShadow: style.textShadow,
+      transformOrigin: '0 0',
+      willChange: 'transform, opacity, text-shadow'
+    });
+
+    document.body.append(ghost);
+    brand.classList.add('is-flight-source-hidden');
+    body.classList.add('brand-flight-active');
+
+    const dx = targetRect.left - sourceRect.left;
+    const dy = targetRect.top - sourceRect.top;
+    const targetScale = Math.min(.58, Math.max(.2, targetRect.width / sourceRect.width));
+    const middleScale = Math.min(.76, Math.max(targetScale + .12, .48));
+
+    const animation = ghost.animate([
+      {
+        transform: 'translate3d(0,0,0) scale(1)',
+        opacity: 1,
+        textShadow: '0 0 0 rgba(255,255,255,0)'
+      },
+      {
+        offset: .28,
+        transform: `translate3d(${dx * .12}px,${dy * .17}px,0) scale(.94)`,
+        opacity: .96,
+        textShadow: '0 0 18px rgba(255,255,255,.22)'
+      },
+      {
+        offset: .7,
+        transform: `translate3d(${dx * .72}px,${dy * .68}px,0) scale(${middleScale})`,
+        opacity: .9,
+        textShadow: '0 0 9px rgba(255,255,255,.14)'
+      },
+      {
+        transform: `translate3d(${dx}px,${dy}px,0) scale(${targetScale})`,
+        opacity: 1,
+        textShadow: '0 0 0 rgba(255,255,255,0)'
+      }
+    ], {
+      duration: MOBILE_BASIC ? 980 : 1120,
+      easing: 'cubic-bezier(.18,.76,.2,1)',
+      fill: 'forwards'
+    });
+
+    animation.finished
+      .catch(() => {})
+      .then(() => {
+        ghost.remove();
+        finish();
+      });
+  };
+
+  window.setTimeout(() => requestAnimationFrame(run), MOBILE_BASIC ? 260 : 360);
+}
+
 function animateCards() {
   const cards = [...document.querySelectorAll('.product-card')];
   if (!cards.length) return;
@@ -147,6 +254,7 @@ async function renderProducts() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initBrandFlight();
   updateCartCounter();
   renderProducts();
 });
