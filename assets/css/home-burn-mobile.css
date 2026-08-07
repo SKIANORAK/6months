@@ -1,0 +1,2 @@
+.mobile-basic.home-burn-page .hero.is-entering .hero-brand-flight{animation:none!important;opacity:1;transform:none}
+.mobile-basic.home-burn-page.brand-burn-active .hero.is-entering .hero-brand-flight{animation:brandBurnOut .9s cubic-bezier(.42,0,.58,1) both!important}
