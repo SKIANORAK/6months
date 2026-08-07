@@ -1,40 +1,33 @@
-/* 6 months — общий архивный эффект тления текста */
-body :where(h1,h2,h3,h4,p,a,span,button,label,summary,li,strong,small,input,select,textarea,.product-price,.product-stock,.detail-price,.detail-description,.selected-stock,.cart-summary,.footer-bottom,.admin-note,.admin-message){
+/* 6 months — глобальное архивное тление текста */
+body :where(h1,h2,h3,h4,p,a,span,button,label,summary,li,strong,small,.product-price,.product-stock,.detail-price,.detail-description,.selected-stock,.cart-summary,.footer-bottom,.admin-note,.admin-message){
   text-shadow:0 0 0 rgba(255,255,255,0);
-  animation:siteTextSmolder 6.2s ease-in-out infinite;
-}
-
-/* усиливаем прежнее тление там, где оно уже назначено основными стилями */
-@keyframes archiveSmolder{
-  0%,100%{text-shadow:0 0 0 rgba(255,255,255,0)}
-  12%{text-shadow:0 0 2px rgba(255,255,255,.12),0 0 7px rgba(255,255,255,.04)}
-  24%{text-shadow:0 0 5px rgba(255,255,255,.24),0 0 16px rgba(255,255,255,.09)}
-  33%{text-shadow:0 0 1px rgba(255,255,255,.08)}
-  48%{text-shadow:0 0 7px rgba(255,255,255,.2),0 0 20px rgba(255,255,255,.07)}
-  58%{text-shadow:0 0 2px rgba(255,255,255,.09)}
-  73%{text-shadow:0 0 9px rgba(255,255,255,.23),0 0 24px rgba(255,255,255,.065)}
-  84%{text-shadow:0 0 3px rgba(255,255,255,.1)}
+  animation:siteTextSmolder 5.4s ease-in-out infinite;
 }
 
 @keyframes siteTextSmolder{
-  0%,100%{text-shadow:0 0 0 rgba(255,255,255,0)}
-  14%{text-shadow:0 0 1px rgba(255,255,255,.09)}
-  27%{text-shadow:0 0 5px rgba(255,255,255,.21),0 0 14px rgba(255,255,255,.075)}
-  39%{text-shadow:0 0 2px rgba(255,255,255,.08)}
-  56%{text-shadow:0 0 8px rgba(255,255,255,.24),0 0 22px rgba(255,255,255,.08)}
-  68%{text-shadow:0 0 2px rgba(255,255,255,.07)}
-  82%{text-shadow:0 0 6px rgba(255,255,255,.17),0 0 18px rgba(255,255,255,.055)}
-  91%{text-shadow:0 0 1px rgba(255,255,255,.05)}
+  0%,100%{opacity:1;text-shadow:0 0 0 rgba(255,255,255,0)}
+  10%{opacity:.98;text-shadow:0 0 2px rgba(255,255,255,.12)}
+  21%{opacity:.94;text-shadow:0 0 6px rgba(255,255,255,.25),0 0 18px rgba(255,255,255,.08)}
+  29%{opacity:.99;text-shadow:0 0 1px rgba(255,255,255,.05)}
+  43%{opacity:.92;text-shadow:0 0 10px rgba(255,255,255,.28),0 0 28px rgba(255,255,255,.09)}
+  53%{opacity:.97;text-shadow:0 0 3px rgba(255,255,255,.11)}
+  68%{opacity:.95;text-shadow:0 0 7px rgba(255,255,255,.22),0 0 20px rgba(255,255,255,.07)}
+  79%{opacity:.9;text-shadow:0 0 12px rgba(255,255,255,.29),0 0 34px rgba(255,255,255,.08)}
+  88%{opacity:.98;text-shadow:0 0 2px rgba(255,255,255,.08)}
 }
 
-/* новая главная: бренд сначала выгорает в центре, затем появляется в шапке */
+/* главная: 6 months медленно выгорает в центре и только потом появляется в шапке */
 .home-burn-page .section-heading{text-align:left}
 .home-burn-page .home-logo{transition:none}
 .home-burn-page.brand-intro-pending .home-logo,
 .home-burn-page.brand-burn-active .home-logo{opacity:0!important;pointer-events:none!important}
-.home-burn-page .hero-brand-flight{animation:none;will-change:opacity,filter,transform,letter-spacing,text-shadow}
-.home-burn-page.brand-burn-active .hero-brand-flight{animation:brandBurnOut .9s cubic-bezier(.42,0,.58,1) both!important}
+.home-burn-page .hero-brand-flight{will-change:opacity,filter,transform,letter-spacing,text-shadow}
+.home-burn-page.brand-burn-active .hero-brand-flight{animation:brandBurnOut .9s cubic-bezier(.38,.02,.62,.98) both!important}
 .home-burn-page .hero-brand-flight.is-burned{opacity:0!important;visibility:hidden;pointer-events:none}
+
+/* на мобильной главной отключаем старое heroTitleIn, чтобы burn начинался из неподвижного текста */
+.mobile-basic.home-burn-page .hero.is-entering .hero-brand-flight{animation:none!important;opacity:1;transform:none}
+.mobile-basic.home-burn-page.brand-burn-active .hero.is-entering .hero-brand-flight{animation:brandBurnOut .9s cubic-bezier(.38,.02,.62,.98) both!important}
 
 .home-burn-page.brand-intro-pending .hero-kicker,
 .home-burn-page.brand-intro-pending .hero-copy,
@@ -50,57 +43,59 @@ body :where(h1,h2,h3,h4,p,a,span,button,label,summary,li,strong,small,input,sele
 .home-burn-page.brand-intro-done .home-logo.is-arrived{
   opacity:1;
   pointer-events:auto;
-  animation:headerBrandEmberIn .48s cubic-bezier(.18,.76,.2,1) both,siteTextSmolder 6.2s .65s ease-in-out infinite;
+  animation:headerBrandEmberIn .55s cubic-bezier(.18,.76,.2,1) both,siteTextSmolder 5.4s .7s ease-in-out infinite;
 }
-.home-burn-page.brand-intro-done .hero-kicker{animation:emberStitchReveal .82s .1s cubic-bezier(.18,.75,.2,1) both,siteTextSmolder 6.2s 1.05s ease-in-out infinite!important}
-.home-burn-page.brand-intro-done .hero-copy{animation:emberStitchReveal .9s .28s cubic-bezier(.18,.75,.2,1) both,siteTextSmolder 6.2s 1.25s ease-in-out infinite!important}
-.home-burn-page.brand-intro-done .hero-actions{animation:emberStitchReveal .92s .48s cubic-bezier(.18,.75,.2,1) both!important}
+.home-burn-page.brand-intro-done .hero-kicker{animation:emberStitchReveal .82s .12s cubic-bezier(.18,.75,.2,1) both,siteTextSmolder 5.4s 1.1s ease-in-out infinite!important}
+.home-burn-page.brand-intro-done .hero-copy{animation:emberStitchReveal .9s .3s cubic-bezier(.18,.75,.2,1) both,siteTextSmolder 5.4s 1.3s ease-in-out infinite!important}
+.home-burn-page.brand-intro-done .hero-actions{animation:emberStitchReveal .94s .5s cubic-bezier(.18,.75,.2,1) both!important}
 
 .home-burn-page .catalog-section .section-heading h2{
   opacity:0;
-  filter:blur(11px);
-  letter-spacing:.2em;
-  transform:translateY(6px) scaleX(.94);
+  filter:blur(12px);
+  letter-spacing:.24em;
+  transform:translateY(7px) scaleX(.92);
 }
 .home-burn-page .catalog-section.is-visible .section-heading h2{
-  animation:archiveHeadingResolve 1.08s cubic-bezier(.18,.72,.22,1) both,siteTextSmolder 6.2s 1.15s ease-in-out infinite;
+  animation:archiveHeadingResolve 1.18s cubic-bezier(.18,.72,.22,1) both,siteTextSmolder 5.4s 1.2s ease-in-out infinite;
 }
 
 @keyframes brandBurnOut{
   0%{opacity:1;filter:blur(0);transform:scale(1);letter-spacing:.01em;text-shadow:0 0 0 rgba(255,255,255,0)}
-  18%{opacity:.97;filter:blur(.15px);text-shadow:0 0 4px rgba(255,255,255,.2),0 0 13px rgba(255,255,255,.07)}
-  36%{opacity:.9;filter:blur(.45px);transform:scale(.997);letter-spacing:.018em;text-shadow:0 0 9px rgba(255,255,255,.31),0 0 26px rgba(255,255,255,.1)}
-  53%{opacity:.76;filter:blur(.9px);text-shadow:0 0 3px rgba(255,255,255,.16),0 0 18px rgba(255,255,255,.07)}
-  69%{opacity:.55;filter:blur(1.8px);transform:scale(.991);letter-spacing:.04em;text-shadow:0 0 12px rgba(255,255,255,.27),0 0 32px rgba(255,255,255,.09)}
-  82%{opacity:.27;filter:blur(3.2px);letter-spacing:.075em;text-shadow:0 0 5px rgba(255,255,255,.14)}
-  100%{opacity:0;filter:blur(7px);transform:scale(.975);letter-spacing:.14em;text-shadow:0 0 1px rgba(255,255,255,0)}
+  12%{opacity:.99;text-shadow:0 0 3px rgba(255,255,255,.16),0 0 10px rgba(255,255,255,.05)}
+  28%{opacity:.94;filter:blur(.3px);text-shadow:0 0 8px rgba(255,255,255,.28),0 0 23px rgba(255,255,255,.1)}
+  43%{opacity:.83;filter:blur(.7px);transform:scale(.998);letter-spacing:.022em;text-shadow:0 0 4px rgba(255,255,255,.15)}
+  58%{opacity:.68;filter:blur(1.25px);text-shadow:0 0 13px rgba(255,255,255,.3),0 0 34px rgba(255,255,255,.1)}
+  72%{opacity:.46;filter:blur(2.2px);transform:scale(.993);letter-spacing:.052em;text-shadow:0 0 7px rgba(255,255,255,.2)}
+  84%{opacity:.23;filter:blur(4px);letter-spacing:.09em;text-shadow:0 0 16px rgba(255,255,255,.18),0 0 38px rgba(255,255,255,.06)}
+  100%{opacity:0;filter:blur(8px);transform:scale(.97);letter-spacing:.16em;text-shadow:0 0 0 rgba(255,255,255,0)}
 }
 
 @keyframes headerBrandEmberIn{
-  0%{opacity:0;filter:blur(5px);letter-spacing:.1em;text-shadow:0 0 16px rgba(255,255,255,.2)}
-  45%{opacity:.52;filter:blur(2px);text-shadow:0 0 9px rgba(255,255,255,.15)}
+  0%{opacity:0;filter:blur(7px);letter-spacing:.13em;text-shadow:0 0 20px rgba(255,255,255,.24)}
+  35%{opacity:.28;filter:blur(4px);text-shadow:0 0 15px rgba(255,255,255,.2)}
+  68%{opacity:.72;filter:blur(1.4px);letter-spacing:.06em}
   100%{opacity:1;filter:blur(0);letter-spacing:.04em;text-shadow:0 0 0 rgba(255,255,255,0)}
 }
 
 @keyframes emberStitchReveal{
-  0%{opacity:0;clip-path:inset(0 100% 0 0);filter:blur(4px);letter-spacing:.12em;text-shadow:0 0 15px rgba(255,255,255,.18)}
-  23%{opacity:.28;clip-path:inset(0 73% 0 0);filter:blur(2.4px)}
-  47%{opacity:.63;clip-path:inset(0 43% 0 0);filter:blur(1.25px)}
-  72%{opacity:.86;clip-path:inset(0 13% 0 0);filter:blur(.45px)}
+  0%{opacity:0;clip-path:inset(0 100% 0 0);filter:blur(5px);letter-spacing:.13em;text-shadow:0 0 17px rgba(255,255,255,.2)}
+  21%{opacity:.18;clip-path:inset(0 78% 0 0);filter:blur(3px)}
+  42%{opacity:.5;clip-path:inset(0 51% 0 0);filter:blur(1.7px)}
+  67%{opacity:.8;clip-path:inset(0 20% 0 0);filter:blur(.7px)}
   100%{opacity:1;clip-path:inset(0 0 0 0);filter:blur(0);letter-spacing:normal;text-shadow:0 0 0 rgba(255,255,255,0)}
 }
 
 @keyframes archiveHeadingResolve{
-  0%{opacity:0;filter:blur(13px);letter-spacing:.28em;transform:translateY(9px) scaleX(.9);text-shadow:0 0 26px rgba(255,255,255,.32)}
-  25%{opacity:.22;filter:blur(8px)}
-  38%{opacity:.08;filter:blur(10px)}
-  61%{opacity:.72;filter:blur(3px);letter-spacing:.1em}
-  74%{opacity:.48;filter:blur(2px)}
+  0%{opacity:0;filter:blur(15px);letter-spacing:.32em;transform:translateY(10px) scaleX(.88);text-shadow:0 0 30px rgba(255,255,255,.35)}
+  24%{opacity:.18;filter:blur(10px)}
+  39%{opacity:.07;filter:blur(12px)}
+  60%{opacity:.68;filter:blur(4px);letter-spacing:.12em}
+  76%{opacity:.48;filter:blur(2px)}
   100%{opacity:1;filter:blur(0);letter-spacing:0;transform:none;text-shadow:0 0 0 rgba(255,255,255,0)}
 }
 
 @media(prefers-reduced-motion:reduce){
-  body :where(h1,h2,h3,h4,p,a,span,button,label,summary,li,strong,small,input,select,textarea,.product-price,.product-stock,.detail-price,.detail-description,.selected-stock,.cart-summary,.footer-bottom,.admin-note,.admin-message){animation:none!important;text-shadow:none!important}
+  body :where(h1,h2,h3,h4,p,a,span,button,label,summary,li,strong,small,.product-price,.product-stock,.detail-price,.detail-description,.selected-stock,.cart-summary,.footer-bottom,.admin-note,.admin-message){animation:none!important;text-shadow:none!important;opacity:1!important}
   .home-burn-page.brand-intro-pending .home-logo,.home-burn-page.brand-burn-active .home-logo{opacity:1!important;pointer-events:auto!important}
   .home-burn-page.brand-burn-active .hero-brand-flight{animation:none!important;opacity:0!important}
   .home-burn-page.brand-intro-pending .hero-kicker,.home-burn-page.brand-intro-pending .hero-copy,.home-burn-page.brand-intro-pending .hero-actions{opacity:1!important;clip-path:none!important;filter:none!important}
