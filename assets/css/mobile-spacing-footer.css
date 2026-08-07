@@ -18,29 +18,20 @@ body.mobile-basic{
   flex:0 0 auto;
 }
 
-/* вернуть первый экран к исходному размеру мобильной версии */
+/* увеличить первый экран мобильной версии на 80px по вертикали */
 .mobile-basic .hero{
-  height:315px;
+  height:395px;
   min-height:0;
   max-height:none;
 }
 
-/* отдельный временный блок между видео и каталогом */
+/* отдельный чёрный блок между hero и каталогом */
 .mobile-basic .mobile-placeholder{
-  height:96px;
+  height:296px;
   margin:0;
-  display:grid;
-  place-items:center;
   background:#000;
   border-top:1px solid rgba(255,255,255,.05);
   border-bottom:1px solid rgba(255,255,255,.05);
-}
-
-.mobile-basic .mobile-placeholder span{
-  color:rgba(255,255,255,.2);
-  font-size:9px;
-  letter-spacing:.18em;
-  text-transform:uppercase;
 }
 
 .mobile-basic .catalog-section{
